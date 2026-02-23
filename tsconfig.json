@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "react-jsx",
+    "types": ["vite/client"],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["resources/js/*"] 
+    }
+  },
+  "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "resources/js/**/*.d.ts", "resources/js/Pages/Profile/Partials/DeleteUserForm.jsx", "resources/js/Pages/Auth/VerifyEmail.jsx", "resources/js/Pages/Auth/ResetPassword.jsx", "resources/js/Pages/Auth/Register.jsx", "resources/js/Pages/Auth/Login.jsx", "resources/js/Pages/Auth/ForgotPassword.jsx", "resources/js/Pages/Auth/ConfirmPassword.jsx"]
+}
