@@ -4,6 +4,7 @@ import { useState, FormEvent, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Badge from '@/Components/Badge';
 import SelectInput from '@/Components/SelectInput';
+import FormSelect from '@/Components/FormSelect';
 import useAutoRefresh from '@/hooks/useAutoRefresh';
 import { renderWithAppleEmojis } from '@/utils/appleEmoji';
 
@@ -457,17 +458,26 @@ export default function AdminDashboard({
                                                         value={data[field.id as keyof typeof data]}
                                                         onChange={e => setData(field.id as any, e.target.value)}
                                                     />
+                                                    {errors[field.id as keyof typeof errors] && (
+                                                        <p className="text-red-500 text-xs mt-1">{errors[field.id as keyof typeof errors]}</p>
+                                                    )}
                                                 </div>
                                             ))}
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Year</label>
-                                                <input
-                                                    type="number"
-                                                    placeholder="2024"
-                                                    className="w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-100 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition-all"
+                                                <FormSelect
+                                                    options={Array.from({ length: 100 }, (_, i) => {
+                                                        const y = new Date().getFullYear() - i;
+                                                        return { value: y, label: y.toString() };
+                                                    })}
                                                     value={data.tahun}
-                                                    onChange={e => setData('tahun', e.target.value)}
+                                                    onChange={(value) => setData('tahun', value)}
+                                                    placeholder="Select Year"
+                                                    className="w-full"
                                                 />
+                                                {errors.tahun && (
+                                                    <p className="text-red-500 text-xs mt-1">{errors.tahun}</p>
+                                                )}
                                             </div>
 
                                             <button type="submit" className={`w-full py-2.5 rounded-lg shadow-lg dark:shadow-none text-white font-semibold transition-all duration-200 transform active:scale-95 flex justify-center items-center gap-2 ${isEditing ? 'bg-amber-500 hover:bg-amber-600' : 'bg-indigo-600 hover:bg-indigo-700'}`}>

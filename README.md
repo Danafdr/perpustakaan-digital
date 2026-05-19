@@ -1,59 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Perpustakaan Digital (Digital Library)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, full-stack digital library management system built with **Laravel** (Backend) and **React/Inertia.js** (Frontend). 
 
-## About Laravel
+## 📋 System Requirements
+Before running this project, ensure you have the following installed on your system:
+- **PHP** (>= 8.1)
+- **Composer** (PHP dependency manager)
+- **Node.js & npm** (Frontend asset bundler)
+- **MySQL/MariaDB** (Database)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Getting Started
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+You can run this project using either a local web server stack (like XAMPP/Laragon) or via Docker (using Laravel Sail). Choose the method that best fits your workflow.
 
-## Learning Laravel
+### Option 1: Using XAMPP / Laragon (Recommended for Windows)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+This is the standard approach for local PHP development on Windows.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository** (if you haven't already) into your `htdocs` (XAMPP) or `www` (Laragon) folder:
+   ```bash
+   git clone https://github.com/Danafdr/perpustakaan-digital.git
+   cd perpustakaan-digital
+   ```
+2. **Install PHP Dependencies**:
+   ```bash
+   composer install
+   ```
+3. **Install Frontend Dependencies**:
+   ```bash
+   npm install
+   ```
+4. **Environment Setup**:
+   Copy the example environment file and generate your application key:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+5. **Database Configuration**:
+   - Open your XAMPP Control Panel or Laragon and start **Apache** and **MySQL**.
+   - Open your database GUI (phpMyAdmin, HeidiSQL, etc.) and create a new empty database named `perpustakaan_digital`.
+   - Ensure your `.env` file matches your local credentials (default XAMPP/Laragon user is usually `root` with no password):
+     ```env
+     DB_DATABASE=perpustakaan_digital
+     DB_USERNAME=root
+     DB_PASSWORD=
+     ```
+6. **Run Migrations & Seed the Database**:
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+7. **Start the Application**:
+   You need to run two processes simultaneously in two separate terminal windows:
+   - **Terminal 1 (Backend Server)**: `php artisan serve`
+   - **Terminal 2 (Frontend Bundler)**: `npm run dev`
 
-## Laravel Sponsors
+Visit `http://localhost:8000` or your configured custom domain in your browser!
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+### Option 2: Using Docker (Laravel Sail)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+If you prefer a containerized environment without installing PHP/MySQL directly on your machine, you can use Docker.
 
-## Contributing
+1. **Install Docker Desktop** and make sure it is running.
+2. **Install PHP Dependencies**: 
+   *(Note: If you don't have PHP locally, you can use a small Docker container to install vendor dependencies first as per Laravel's official docs, or run `composer install` locally if you have PHP).*
+3. **Copy `.env` file**:
+   ```bash
+   cp .env.example .env
+   ```
+4. **Start the Sail Containers**:
+   ```bash
+   ./vendor/bin/sail up -d
+   ```
+5. **Run Setup Commands Inside Docker**:
+   ```bash
+   ./vendor/bin/sail artisan key:generate
+   ./vendor/bin/sail artisan migrate:fresh --seed
+   ./vendor/bin/sail npm install
+   ./vendor/bin/sail npm run dev
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Your app will be available at `http://localhost`.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🛠️ Essential Laravel Commands
 
-## Security Vulnerabilities
+When exploring or modifying the code, you will frequently use these `php artisan` commands:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Command | Description |
+|---------|-------------|
+| `php artisan serve` | Starts the local PHP development server at localhost:8000. |
+| `php artisan migrate` | Runs any pending database migrations (creates your tables). |
+| `php artisan migrate:fresh` | **Destructive!** Drops all tables and re-runs all migrations from scratch. |
+| `php artisan migrate:fresh --seed` | Drops all tables, re-migrates, and populates the database with dummy/initial data. |
+| `php artisan make:model Book -m` | Creates a new Model (`Book`) and a Migration file (`-m`) for it. |
+| `php artisan make:controller BookController` | Creates a new HTTP Controller to handle logic. |
+| `php artisan route:list` | Displays a list of all registered routes and their endpoints. |
+| `php artisan optimize:clear` | Clears all cached configurations, routes, and views if your app acts weirdly. |
 
-## License
+## 📚 Code Architecture Guide
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Frontend (`/resources/js`)**: Built with React and TypeScript. We use Inertia.js to seamlessly connect React components to Laravel routes without needing a traditional REST API. 
+- **Backend (`/app/Http/Controllers`)**: Contains the business logic. Look at `AdminController.php` for library management logic.
+- **Routes (`/routes/web.php`)**: Where URLs are mapped to Controller functions.
+- **Database (`/database/migrations`)**: Where the structure of your SQL tables is defined.

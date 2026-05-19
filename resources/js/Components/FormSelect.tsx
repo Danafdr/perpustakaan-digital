@@ -6,7 +6,7 @@ interface SelectOption {
     label: string;
 }
 
-interface SelectInputProps {
+interface FormSelectProps {
     options: SelectOption[];
     value: string | number | null;
     onChange: (value: any) => void;
@@ -15,14 +15,14 @@ interface SelectInputProps {
     disabled?: boolean;
 }
 
-export default function SelectInput({
+export default function FormSelect({
     options,
     value,
     onChange,
     placeholder = 'Select',
     className = '',
     disabled = false
-}: SelectInputProps) {
+}: FormSelectProps) {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -47,12 +47,12 @@ export default function SelectInput({
                 onClick={() => !disabled && setIsOpen(!isOpen)}
                 disabled={disabled}
                 className={
-                    `w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ` +
+                    `w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 dark:text-gray-100 rounded-lg shadow-sm pl-3 pr-10 py-2.5 text-left cursor-default focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition-all ` +
                     (disabled ? 'opacity-50 cursor-not-allowed' : '')
                 }
             >
-                <span className={`block truncate ${value === null || value === '' ? 'text-gray-400' : ''}`}>{selectedLabel}</span>
-                <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <span className={`block truncate ${value === null || value === '' ? 'text-gray-400 dark:text-gray-400' : ''}`}>{selectedLabel}</span>
+                <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                     <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>

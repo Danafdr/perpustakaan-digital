@@ -56,8 +56,14 @@ class AdminController extends Controller
 
         // Generate kode_buku manually mostly for demo 
         // (Assuming format B + 3 digits)
-        $lastBook = Book::latest()->first();
+        $lastBook = Book::orderBy('id', 'desc')->first();
         $nextId = $lastBook ? $lastBook->id + 1 : 1;
+        
+        // Ensure no collisions by checking against existing codes
+        while (Book::where('kode_buku', 'B' . str_pad($nextId, 3, '0', STR_PAD_LEFT))->exists()) {
+            $nextId++;
+        }
+        
         $validated['kode_buku'] = 'B' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
 
         Book::create($validated);
