@@ -1,13 +1,18 @@
 {
   "version": 2,
-  "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.7.2"
+  "builds": [
+    {
+      "src": "api/index.php",
+      "use": "vercel-php@0.7.2"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "public"
+      }
     }
-  },
-  "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "framework": null,
+  ],
   "routes": [
     {
       "src": "/build/(.*)",
