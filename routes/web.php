@@ -40,6 +40,12 @@ Route::middleware(['auth'])->group(function () {
     // 7. System Settings
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
     Route::post('/admin/settings', [AdminController::class, 'updateSettings'])->name('admin.settings.update');
+
+    // 8. Digital Content & Reading
+    Route::get('/read/{id}', [\App\Http\Controllers\DigitalContentController::class, 'read'])->name('books.read');
+    Route::get('/stream/{id}', [\App\Http\Controllers\DigitalContentController::class, 'streamFile'])->name('books.stream');
+    Route::post('/read/{id}/bookmark', [\App\Http\Controllers\DigitalContentController::class, 'saveBookmark'])->name('books.bookmark');
+    Route::post('/hold/{id}', [\App\Http\Controllers\DigitalContentController::class, 'placeHold'])->name('books.hold');
 });
 
 // --- PUBLIC & DASHBOARD LOGIC ---

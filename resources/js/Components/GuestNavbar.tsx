@@ -16,7 +16,7 @@ export default function GuestNavbar() {
                             <Link href="/">
                                 <ApplicationLogo className="block h-9 w-auto fill-current text-indigo-600 dark:text-indigo-400" />
                             </Link>
-                            <span className="ml-2 font-bold text-gray-800 dark:text-gray-100 text-lg">DigiLib<span className="text-indigo-600 dark:text-indigo-400">Pro</span></span>
+                            <span className="ml-2 font-bold text-gray-800 dark:text-gray-100 text-lg">Dana's <span className="text-indigo-600 dark:text-indigo-400">Digital Library</span></span>
                         </div>
                     </div>
 

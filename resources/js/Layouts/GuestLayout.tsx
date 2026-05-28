@@ -32,7 +32,7 @@ export default function GuestLayout({ children }: PropsWithChildren) {
                         <div className="bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-lg ring-1 ring-gray-200 dark:ring-gray-700 group-hover:shadow-xl group-hover:ring-indigo-200 dark:group-hover:ring-indigo-800 transition-all duration-300 transform group-hover:-translate-y-1">
                             <ApplicationLogo className="w-12 h-12 fill-current text-indigo-600 dark:text-indigo-400" />
                         </div>
-                        <span className="text-xl font-bold tracking-tight text-gray-800 dark:text-gray-100">DigiLib<span className="text-indigo-600 dark:text-indigo-400">Pro</span></span>
+                        <span className="text-xl font-bold tracking-tight text-gray-800 dark:text-gray-100">Dana's <span className="text-indigo-600 dark:text-indigo-400">Digital Library</span></span>
                     </Link>
                 </div>
 
@@ -45,7 +45,7 @@ export default function GuestLayout({ children }: PropsWithChildren) {
                 </div>
 
                 <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-8 font-medium">
-                    &copy; {new Date().getFullYear()} DigiLib Pro Library System
+                    &copy; {new Date().getFullYear()} Dana's Digital Library System
                 </p>
             </div>
         </div>

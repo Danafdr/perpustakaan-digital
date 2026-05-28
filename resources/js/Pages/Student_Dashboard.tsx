@@ -26,6 +26,14 @@ export interface Book {
     pengarang: string;
     penerbit: string;
     tahun: number;
+    isbn?: string;
+    genre?: string;
+    description?: string;
+    file_type?: string;
+    file_path?: string;
+    cover_image_path?: string;
+    max_concurrent_loans?: number;
+    is_historical_archive?: boolean;
 }
 
 export interface Transaction {
@@ -65,16 +73,20 @@ export default function StudentDashboard({ auth, books, activeTransactions = [] 
     const { reset } = useForm();
     // Search state for browsing books
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [selectedGenre, setSelectedGenre] = useState<string>('All');
+
+    const genres = ['All', ...Array.from(new Set(books.map(b => b.genre).filter(Boolean))) as string[]];
 
     const filteredBooks = books.filter((b) => {
         const q = searchQuery.trim().toLowerCase();
-        if (!q) return true;
-        return (
+        const matchesQuery = !q || (
             b.judul_buku.toLowerCase().includes(q) ||
             b.pengarang.toLowerCase().includes(q) ||
             b.kode_buku.toLowerCase().includes(q) ||
             String(b.tahun).includes(q)
         );
+        const matchesGenre = selectedGenre === 'All' || b.genre === selectedGenre;
+        return matchesQuery && matchesGenre;
     });
 
     // --- HANDLERS ---
@@ -183,11 +195,19 @@ export default function StudentDashboard({ auth, books, activeTransactions = [] 
                             </button>
                         </div>
 
-                        {/* Search Bar - right side */}
+                        {/* Filters & Search - right side */}
                         {activeTab === 'browse' && (
-                            <div className="w-full sm:w-80">
-                                <label className="sr-only">Search books</label>
-                                <div className="relative">
+                            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                                <select
+                                    value={selectedGenre}
+                                    onChange={(e) => setSelectedGenre(e.target.value)}
+                                    className="w-full sm:w-40 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white"
+                                >
+                                    {genres.map(g => (
+                                        <option key={g} value={g}>{g}</option>
+                                    ))}
+                                </select>
+                                <div className="relative w-full sm:w-80">
                                     <input
                                         type="search"
                                         value={searchQuery}
@@ -226,13 +246,26 @@ export default function StudentDashboard({ auth, books, activeTransactions = [] 
                                             </div>
 
                                             <div className="flex-1 z-10">
-                                                <span className="inline-block px-2 py-1 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs font-mono rounded mb-4 border border-gray-100 dark:border-gray-600">
-                                                    {book.kode_buku}
-                                                </span>
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <span className="inline-block px-2 py-1 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs font-mono rounded border border-gray-100 dark:border-gray-600">
+                                                        {book.kode_buku}
+                                                    </span>
+                                                    {book.file_type && (
+                                                        <span className="inline-block px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold rounded uppercase">
+                                                            {book.file_type}
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
                                                     {renderWithAppleEmojis(book.judul_buku)}
                                                 </h3>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{renderWithAppleEmojis(book.pengarang)}</p>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{renderWithAppleEmojis(book.pengarang)}</p>
+                                                
+                                                {book.genre && (
+                                                    <span className="inline-block mb-3 px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full">
+                                                        {book.genre}
+                                                    </span>
+                                                )}
                                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                                     <svg className="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                                     {book.pengarang}
@@ -293,12 +326,25 @@ export default function StudentDashboard({ auth, books, activeTransactions = [] 
                                                 </div>
                                             </div>
 
-                                            <button
-                                                onClick={() => openReturnModal(t)}
-                                                className="w-full md:w-auto px-6 py-3 bg-white dark:bg-gray-700 border-2 border-indigo-100 dark:border-indigo-600 text-indigo-600 dark:text-indigo-400 font-bold rounded-xl hover:bg-indigo-600 dark:hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-200 flex items-center justify-center gap-2"
-                                            >
-                                                Return Book
-                                            </button>
+                                            <div className="w-full md:w-auto flex flex-col sm:flex-row gap-2">
+                                                {t.book.file_type && (
+                                                    <a
+                                                        href={route('books.read', t.book.id)}
+                                                        className="w-full md:w-auto px-6 py-3 bg-indigo-600 border border-transparent text-white font-bold rounded-xl hover:bg-indigo-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg dark:shadow-none"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                                                        </svg>
+                                                        Read Book
+                                                    </a>
+                                                )}
+                                                <button
+                                                    onClick={() => openReturnModal(t)}
+                                                    className="w-full md:w-auto px-6 py-3 bg-white dark:bg-gray-700 border-2 border-indigo-100 dark:border-indigo-600 text-indigo-600 dark:text-indigo-400 font-bold rounded-xl hover:bg-indigo-600 dark:hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-200 flex items-center justify-center gap-2"
+                                                >
+                                                    Return Book
+                                                </button>
+                                            </div>
                                         </div>
                                     );
                                 })

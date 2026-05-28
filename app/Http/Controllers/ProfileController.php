@@ -22,11 +22,29 @@ class ProfileController extends Controller
         $userRequests = \App\Models\PendingRequest::where('user_id', $request->user()->id)
             ->orderBy('created_at', 'desc')
             ->get();
+            
+        $bookmarks = \App\Models\Bookmark::where('user_id', $request->user()->id)
+            ->with('book')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        $holds = \App\Models\Hold::where('user_id', $request->user()->id)
+            ->with('book')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        $transactionHistory = \App\Models\Transaction::where('user_id', $request->user()->id)
+            ->with('book')
+            ->orderBy('tanggal_pinjam', 'desc')
+            ->get();
 
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'userRequests' => $userRequests,
+            'bookmarks' => $bookmarks,
+            'holds' => $holds,
+            'transactionHistory' => $transactionHistory,
         ]);
     }
 

@@ -52,7 +52,22 @@ class AdminController extends Controller
             'pengarang' => 'required|string|max:255',
             'penerbit' => 'required|string|max:255',
             'tahun' => 'required|integer',
+            'isbn' => 'nullable|string|max:255',
+            'genre' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'file_type' => 'nullable|in:pdf,epub,audio',
+            'max_concurrent_loans' => 'nullable|integer',
+            'is_historical_archive' => 'nullable|boolean',
+            'file_path' => 'nullable|file|max:102400',
+            'cover_image_path' => 'nullable|image|max:10240',
         ]);
+
+        if ($request->hasFile('file_path')) {
+            $validated['file_path'] = $request->file('file_path')->store('books/files', 'public');
+        }
+        if ($request->hasFile('cover_image_path')) {
+            $validated['cover_image_path'] = $request->file('cover_image_path')->store('books/covers', 'public');
+        }
 
         // Generate kode_buku manually mostly for demo 
         // (Assuming format B + 3 digits)
@@ -65,6 +80,8 @@ class AdminController extends Controller
         }
         
         $validated['kode_buku'] = 'B' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+        $validated['max_concurrent_loans'] = $request->max_concurrent_loans ?? 3;
+        $validated['is_historical_archive'] = $request->has('is_historical_archive') ? $request->is_historical_archive : false;
 
         Book::create($validated);
 
@@ -81,7 +98,27 @@ class AdminController extends Controller
             'pengarang' => 'required|string|max:255',
             'penerbit' => 'required|string|max:255',
             'tahun' => 'required|integer',
+            'isbn' => 'nullable|string|max:255',
+            'genre' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'file_type' => 'nullable|in:pdf,epub,audio',
+            'max_concurrent_loans' => 'nullable|integer',
+            'is_historical_archive' => 'nullable|boolean',
+            'file_path' => 'nullable|file|max:102400',
+            'cover_image_path' => 'nullable|image|max:10240',
         ]);
+
+        if ($request->hasFile('file_path')) {
+            if ($book->file_path) \Illuminate\Support\Facades\Storage::disk('public')->delete($book->file_path);
+            $validated['file_path'] = $request->file('file_path')->store('books/files', 'public');
+        }
+        if ($request->hasFile('cover_image_path')) {
+            if ($book->cover_image_path) \Illuminate\Support\Facades\Storage::disk('public')->delete($book->cover_image_path);
+            $validated['cover_image_path'] = $request->file('cover_image_path')->store('books/covers', 'public');
+        }
+
+        $validated['max_concurrent_loans'] = $request->max_concurrent_loans ?? 3;
+        $validated['is_historical_archive'] = $request->has('is_historical_archive') ? $request->is_historical_archive : false;
 
         $book->update($validated);
 

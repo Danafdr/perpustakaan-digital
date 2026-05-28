@@ -12,9 +12,12 @@ interface EditProfileProps {
     mustVerifyEmail: boolean;
     status?: string;
     userRequests?: any[];
+    bookmarks?: any[];
+    holds?: any[];
+    transactionHistory?: any[];
 }
 
-export default function Edit({ mustVerifyEmail, status, userRequests = [] }: EditProfileProps) {
+export default function Edit({ mustVerifyEmail, status, userRequests = [], bookmarks = [], holds = [], transactionHistory = [] }: EditProfileProps) {
     // Correctly typed usePage hook
     const { auth } = usePage<PageProps>().props;
 
@@ -88,26 +91,103 @@ export default function Edit({ mustVerifyEmail, status, userRequests = [] }: Edi
                         </div>
 
 
-                        {/* Profile Requests Section - Show user's pending/approved/rejected requests */}
-                        {false && userRequests && userRequests.length > 0 && (
-                            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sm:p-8 transition-colors duration-200 mb-6">
-                                <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                                        Recent Requests
-                                    </h2>
-                                    <Link
-                                        href={route('profile.requests.index')}
-                                        className="text-sm text-indigo-600 hover:text-indigo-500 font-medium"
-                                    >
-                                        View All History
-                                    </Link>
-                                </div>
-                                <ProfileRequestsSection
-                                    requests={userRequests.slice(0, 2)}
-                                    className="max-w-xl"
-                                />
+                        {/* Digital Library Activity */}
+                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sm:p-8 transition-colors duration-200 mb-6">
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 border-b border-gray-100 dark:border-gray-700 pb-2">
+                                Digital Library Activity
+                            </h2>
+
+                            {/* Bookmarks */}
+                            <div className="mb-8">
+                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-indigo-500">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                                    </svg>
+                                    My Bookmarks
+                                </h3>
+                                {bookmarks.length === 0 ? (
+                                    <p className="text-sm text-gray-500">No bookmarks saved yet.</p>
+                                ) : (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {bookmarks.map((bm: any) => (
+                                            <div key={bm.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-750">
+                                                <div className="flex justify-between items-start mb-1">
+                                                    <h4 className="font-bold text-gray-900 dark:text-gray-100">{bm.book?.judul_buku}</h4>
+                                                    <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded font-bold">Marker</span>
+                                                </div>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400 italic">"{bm.progress_marker || "No marker provided"}"</p>
+                                                <Link href={route('books.read', bm.book_id)} className="text-xs text-indigo-600 hover:underline mt-2 inline-block font-medium">Continue Reading &rarr;</Link>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                        )}
+
+                            {/* Hold Requests */}
+                            <div className="mb-8">
+                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-amber-500">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    Hold Requests
+                                </h3>
+                                {holds.length === 0 ? (
+                                    <p className="text-sm text-gray-500">No active holds.</p>
+                                ) : (
+                                    <ul className="space-y-3">
+                                        {holds.map((hold: any) => (
+                                            <li key={hold.id} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                                                <div>
+                                                    <p className="font-bold text-sm text-gray-900 dark:text-gray-100">{hold.book?.judul_buku}</p>
+                                                    <p className="text-xs text-gray-500">Requested on: {new Date(hold.created_at).toLocaleDateString()}</p>
+                                                </div>
+                                                <span className={`px-2 py-1 text-xs font-bold rounded-full ${hold.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                                                    {hold.status.toUpperCase()}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+
+                            {/* Transaction History */}
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-gray-500">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+                                    </svg>
+                                    Loan History
+                                </h3>
+                                {transactionHistory.length === 0 ? (
+                                    <p className="text-sm text-gray-500">No past loans found.</p>
+                                ) : (
+                                    <div className="overflow-x-auto">
+                                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                            <thead className="bg-gray-50 dark:bg-gray-800">
+                                                <tr>
+                                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Book</th>
+                                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Borrowed Date</th>
+                                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                                {transactionHistory.map((t: any) => (
+                                                    <tr key={t.id}>
+                                                        <td className="px-4 py-2 text-sm text-gray-900 dark:text-gray-100">{t.book?.judul_buku}</td>
+                                                        <td className="px-4 py-2 text-sm text-gray-500">{new Date(t.tanggal_pinjam).toLocaleDateString()}</td>
+                                                        <td className="px-4 py-2 text-sm">
+                                                            <span className={`px-2 py-0.5 rounded text-xs font-bold ${t.status === 'pinjam' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
+                                                                {t.status.toUpperCase()}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
 
                         {/* Danger Zone: Account Deletion Section */}
                         <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-red-100 dark:border-red-900/30 p-6 sm:p-8 transition-colors duration-200 ${!isEditing ? 'opacity-60 grayscale-[0.5] pointer-events-none' : ''}`}>

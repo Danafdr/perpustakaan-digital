@@ -56,4 +56,19 @@ class User extends Authenticatable
             'approved_at' => 'datetime',
         ];
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    public function holds()
+    {
+        return $this->hasMany(Hold::class);
+    }
 }

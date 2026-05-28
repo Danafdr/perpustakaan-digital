@@ -17,7 +17,7 @@ export default function Guest_Dashboard({ books }: GuestDashboardProps) {
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
             <GuestNavbar />
 
-            <Head title="Welcome to DigiLib Pro" />
+            <Head title="Welcome to Dana's Digital Library" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,7 +25,7 @@ export default function Guest_Dashboard({ books }: GuestDashboardProps) {
                     <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-8 mb-10 text-white shadow-xl relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl pointer-events-none"></div>
                         <div className="relative z-10">
-                            <h1 className="text-3xl font-extrabold mb-2">Welcome to DigiLib Pro! 👋</h1>
+                            <h1 className="text-3xl font-extrabold mb-2">Welcome to Dana's Digital Library! 👋</h1>
                             <p className="text-indigo-100 max-w-xl">Explore our vast collection of books. Login to borrow and manage your loans.</p>
                             <div className="mt-6">
                                 <Link
@@ -60,13 +60,27 @@ export default function Guest_Dashboard({ books }: GuestDashboardProps) {
                                     </div>
 
                                     <div className="flex-1 z-10">
-                                        <span className="inline-block px-2 py-1 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs font-mono rounded mb-4 border border-gray-100 dark:border-gray-600">
-                                            {book.kode_buku}
-                                        </span>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <span className="inline-block px-2 py-1 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs font-mono rounded border border-gray-100 dark:border-gray-600">
+                                                {book.kode_buku}
+                                            </span>
+                                            {book.file_type && (
+                                                <span className="inline-block px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold rounded uppercase">
+                                                    {book.file_type}
+                                                </span>
+                                            )}
+                                        </div>
                                         <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
                                             {renderWithAppleEmojis(book.judul_buku)}
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{renderWithAppleEmojis(book.pengarang)}</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{renderWithAppleEmojis(book.pengarang)}</p>
+                                        
+                                        {book.genre && (
+                                            <span className="inline-block mb-3 px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full">
+                                                {book.genre}
+                                            </span>
+                                        )}
+                                        
                                         <div className="space-y-1 mb-6">
                                             <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                                 <svg className="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>

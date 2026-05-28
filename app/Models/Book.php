@@ -9,18 +9,34 @@ class Book extends Model
 {
     use HasFactory;
 
-    // This tells Laravel: "It is okay to save data into these columns"
     protected $fillable = [
         'kode_buku',
         'judul_buku',
         'pengarang',
         'penerbit',
         'tahun',
+        'isbn',
+        'genre',
+        'description',
+        'cover_image_path',
+        'file_path',
+        'file_type',
+        'max_concurrent_loans',
+        'is_historical_archive',
     ];
 
-    // Add this inside your Book class
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    public function holds()
+    {
+        return $this->hasMany(Hold::class);
     }
 }

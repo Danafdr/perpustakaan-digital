@@ -32,6 +32,14 @@ export interface Book {
     pengarang: string;
     penerbit: string;
     tahun: number;
+    isbn?: string;
+    genre?: string;
+    description?: string;
+    file_type?: string;
+    file_path?: string;
+    cover_image_path?: string;
+    max_concurrent_loans?: number;
+    is_historical_archive?: boolean;
 }
 
 export interface Transaction {
@@ -126,15 +134,30 @@ export default function AdminDashboard({
         pengarang: '',
         penerbit: '',
         tahun: '' as string | number,
+        isbn: '',
+        genre: '',
+        description: '',
+        file_type: '',
+        max_concurrent_loans: 3,
+        is_historical_archive: false,
+        file_path: null as File | null,
+        cover_image_path: null as File | null,
+        _method: 'post',
     });
 
     // --- FORM HANDLERS ---
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (isEditing && editBookId) {
-            put(route('books.update', editBookId), { onSuccess: () => resetForm() });
+            post(route('books.update', editBookId), { 
+                forceFormData: true,
+                onSuccess: () => resetForm() 
+            });
         } else {
-            post(route('books.store'), { onSuccess: () => resetForm() });
+            post(route('books.store'), { 
+                forceFormData: true,
+                onSuccess: () => resetForm() 
+            });
         }
     };
 
@@ -146,6 +169,15 @@ export default function AdminDashboard({
             pengarang: book.pengarang,
             penerbit: book.penerbit,
             tahun: book.tahun,
+            isbn: book.isbn || '',
+            genre: book.genre || '',
+            description: book.description || '',
+            file_type: book.file_type || '',
+            max_concurrent_loans: book.max_concurrent_loans ?? 3,
+            is_historical_archive: book.is_historical_archive || false,
+            file_path: null,
+            cover_image_path: null,
+            _method: 'put',
         });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -339,7 +371,7 @@ export default function AdminDashboard({
                                     <path d="M11.25 4.533A9.707 9.707 0 0 0 6 3a9.735 9.735 0 0 0-3.25.555.75.75 0 0 0-.5.707v14.25a.75.75 0 0 0 1 .707A8.237 8.237 0 0 1 6 18.75c1.995 0 3.823.707 5.25 1.886V4.533ZM12.75 20.636A8.214 8.214 0 0 1 18 18.75c.966 0 1.89.166 2.75.472a.75.75 0 0 0 1-.707V4.262a.75.75 0 0 0-.5-.707A9.735 9.735 0 0 0 18 3a9.707 9.707 0 0 0-5.25 1.533v16.103Z" />
                                 </svg>
                             </div>
-                            <span className="text-xl font-bold text-gray-800 dark:text-gray-100 tracking-tight">DigiLib<span className="text-indigo-600 dark:text-indigo-400">Pro</span></span>
+                            <span className="text-xl font-bold text-gray-800 dark:text-gray-100 tracking-tight">Dana's <span className="text-indigo-600 dark:text-indigo-400">Digital Library</span></span>
                         </div>
 
                         <nav className="space-y-1.5">
@@ -478,6 +510,25 @@ export default function AdminDashboard({
                                                 {errors.tahun && (
                                                     <p className="text-red-500 text-xs mt-1">{errors.tahun}</p>
                                                 )}
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Genre</label>
+                                                <input type="text" placeholder="e.g. Science Fiction" className="w-full bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 dark:text-gray-100 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition-all" value={data.genre} onChange={e => setData('genre', e.target.value)} />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Format</label>
+                                                <FormSelect options={[{value:'pdf',label:'PDF'},{value:'epub',label:'EPUB'},{value:'audio',label:'Audio'}]} value={data.file_type} onChange={v => setData('file_type', v as string)} placeholder="Select Format" className="w-full" />
+                                                {errors.file_type && <p className="text-red-500 text-xs mt-1">{errors.file_type}</p>}
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Book File</label>
+                                                <input type="file" onChange={e => setData('file_path', e.target.files ? e.target.files[0] : null)} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+                                                {errors.file_path && <p className="text-red-500 text-xs mt-1">{errors.file_path}</p>}
+                                            </div>
+                                            <div className="flex items-center mt-4">
+                                                <input type="checkbox" id="historical" checked={data.is_historical_archive} onChange={e => setData('is_historical_archive', e.target.checked)} className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                                <label htmlFor="historical" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">Historical Archive</label>
                                             </div>
 
                                             <button type="submit" className={`w-full py-2.5 rounded-lg shadow-lg dark:shadow-none text-white font-semibold transition-all duration-200 transform active:scale-95 flex justify-center items-center gap-2 ${isEditing ? 'bg-amber-500 hover:bg-amber-600' : 'bg-indigo-600 hover:bg-indigo-700'}`}>
