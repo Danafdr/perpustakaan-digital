@@ -179,72 +179,101 @@ export default function AuthenticatedLayout({ header, children }: AuthenticatedL
                     </div>
                 </div>
 
+                {/* Modern Mobile Navigation Overlay */}
                 <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden transition-all duration-300'
-                    }
+                    className={`sm:hidden absolute w-full left-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 shadow-2xl z-40 transition-all duration-300 ease-out origin-top ${
+                        showingNavigationDropdown ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-95 pointer-events-none'
+                    }`}
                 >
-                    <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route(dashboardRoute)}
-                            active={route().current(dashboardRoute)}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <div className="border-t border-gray-200 dark:border-gray-700 pb-3 pt-3 px-4">
-                        <button
-                            onClick={toggleTheme}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
-                        >
-                            {theme === 'light' ? (
-                                <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                                        <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clipRule="evenodd" />
-                                    </svg>
-                                    <span>Dark Mode</span>
-                                </>
-                            ) : (
-                                <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-                                    </svg>
-                                    <span>Light Mode</span>
-                                </>
-                            )}
-                        </button>
-                    </div>
-
-                    <div className="border-t border-gray-200 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800 dark:text-gray-100">
-                                {renderWithAppleEmojis(user.name)}
+                    <div className="px-4 pt-4 pb-6 space-y-6">
+                        {/* User Profile Card */}
+                        <div className="flex items-center gap-4 bg-gray-50/80 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700/50 shadow-sm">
+                            <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-xl ring-2 ring-white dark:ring-gray-800 shadow-inner">
+                                {user.name.charAt(0).toUpperCase()}
                             </div>
-                            <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {user.email}
+                            <div className="flex-1 min-w-0">
+                                <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
+                                    {renderWithAppleEmojis(user.name)}
+                                </h3>
+                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                                    {user.email}
+                                </p>
                             </div>
                         </div>
 
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
+                        {/* Navigation Links */}
+                        <div className="space-y-1">
+                            <Link
+                                href={route(dashboardRoute)}
+                                onClick={() => setShowingNavigationDropdown(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors ${route().current(dashboardRoute) ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50'}`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                    <path d="M11.47 3.84a.75.75 0 011.06 0l8.99 9a.75.75 0 101.06-1.06l-9-9a2.25 2.25 0 00-3.18 0l-9 9a.75.75 0 101.06 1.06l8.99-9z" />
+                                    <path d="M12 2.25l-9 9V19.5a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 19.5v-8.25l-9-9z" />
+                                </svg>
+                                Dashboard
+                            </Link>
+
+                            <Link
+                                href={route('profile.edit')}
+                                onClick={() => setShowingNavigationDropdown(false)}
+                                className="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+                                </svg>
                                 Profile
-                            </ResponsiveNavLink>
-                            {/* Admin Settings Link */}
+                            </Link>
+
                             {user.role === 'admin' && (
-                                <ResponsiveNavLink href={route('admin.settings')}>
+                                <Link
+                                    href={route('admin.settings')}
+                                    onClick={() => setShowingNavigationDropdown(false)}
+                                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                        <path fillRule="evenodd" d="M11.828 2.25c-.916 0-1.699.663-1.85 1.567l-.091.549a3.375 3.375 0 01-2.489 2.489l-.549.092a1.875 1.875 0 01-2.115-1.114l-.254-.674a1.875 1.875 0 01.626-2.138L6.2 2.226a1.875 1.875 0 012.33-.299l.66.452a3.375 3.375 0 011.666-1.572L11.828 2.25zm.344 19.5c.916 0 1.699-.663 1.85-1.567l.091-.549a3.375 3.375 0 012.489-2.489l.549-.092a1.875 1.875 0 012.115 1.114l.254.674a1.875 1.875 0 01-.626 2.138l-1.096.793a1.875 1.875 0 01-2.33.299l-.66-.452a3.375 3.375 0 01-1.666 1.572l-.972.863z" clipRule="evenodd" />
+                                    </svg>
                                     Settings
-                                </ResponsiveNavLink>
+                                </Link>
                             )}
-                            <ResponsiveNavLink
+                        </div>
+
+                        {/* Actions */}
+                        <div className="space-y-2 pt-4 border-t border-gray-100 dark:border-gray-800">
+                            <button
+                                onClick={toggleTheme}
+                                className="w-full flex items-center justify-between px-4 py-3 rounded-xl font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    {theme === 'light' ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-indigo-500">
+                                            <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
+                                        </svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-indigo-400">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                                        </svg>
+                                    )}
+                                    <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                                </div>
+                                <div className={`w-11 h-6 bg-gray-200 dark:bg-indigo-600 rounded-full relative transition-colors shadow-inner`}>
+                                    <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${theme === 'dark' ? 'translate-x-5' : ''}`}></div>
+                                </div>
+                            </button>
+
+                            <Link
                                 method="post"
                                 href={route('logout')}
                                 as="button"
-                                className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                             >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                    <path fillRule="evenodd" d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z" clipRule="evenodd" />
+                                </svg>
                                 Log Out
-                            </ResponsiveNavLink>
+                            </Link>
                         </div>
                     </div>
                 </div>
