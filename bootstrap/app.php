@@ -11,6 +11,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
@@ -19,11 +20,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
-            echo "<h1>FATAL LARAVEL EXCEPTION</h1>";
-            echo "<pre style='white-space: pre-wrap;'>" . $e . "</pre>";
-            die();
-        });
+        // Allow Laravel to handle exceptions normally (redirects, validation, etc)
     })->create();
 
 if (isset($_ENV['APP_STORAGE'])) {
