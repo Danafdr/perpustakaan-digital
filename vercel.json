@@ -7,10 +7,16 @@
   },
   "installCommand": "npm install",
   "buildCommand": "npm run build",
-  "outputDirectory": "public",
   "framework": null,
   "routes": [
-    { "handle": "filesystem" },
+    {
+      "src": "/build/(.*)",
+      "dest": "/public/build/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/public/favicon.ico"
+    },
     {
       "src": "/(.*)",
       "dest": "/api/index.php"
