@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ThemeProvider } from './Contexts/ThemeContext';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -19,6 +20,7 @@ createInertiaApp({
         root.render(
             <ThemeProvider>
                 <App {...props} />
+                <SpeedInsights />
             </ThemeProvider>
         );
     },
