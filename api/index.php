@@ -35,12 +35,4 @@ $_ENV['APP_EVENTS_CACHE'] = $storagePath . '/bootstrap/cache/events.php';
 putenv("APP_EVENTS_CACHE={$storagePath}/bootstrap/cache/events.php");
 
 // Forward all Vercel requests to Laravel's standard entry point
-try {
-    define('LARAVEL_START', microtime(true));
-    require __DIR__.'/../vendor/autoload.php';
-    $app = require_once __DIR__.'/../bootstrap/app.php';
-    $app->handleRequest(Illuminate\Http\Request::capture());
-} catch (\Throwable $e) {
-    echo "<h1>CRITICAL ERROR (Raw)</h1>";
-    echo "<pre style='white-space: pre-wrap; word-wrap: break-word;'>" . (string) $e . "</pre>";
-}
+require __DIR__ . '/../public/index.php';
