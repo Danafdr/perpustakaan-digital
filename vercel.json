@@ -15,12 +15,7 @@
   ],
   "routes": [
     {
-      "src": "/build/(.*)",
-      "dest": "/public/build/$1"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/public/favicon.ico"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
