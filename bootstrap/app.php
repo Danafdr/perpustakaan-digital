@@ -19,7 +19,11 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
+            echo "<h1>FATAL LARAVEL EXCEPTION</h1>";
+            echo "<pre style='white-space: pre-wrap;'>" . $e . "</pre>";
+            die();
+        });
     })->create();
 
 if (isset($_ENV['APP_STORAGE'])) {
