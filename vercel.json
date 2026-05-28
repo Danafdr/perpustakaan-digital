@@ -2,16 +2,21 @@
   "version": 2,
   "framework": null,
   "outputDirectory": "public",
-  "installCommand": "npm install",
-  "buildCommand": "npm run build",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.2"
     }
   },
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
   "routes": [
     {
-      "handle": "filesystem"
+      "src": "/(build/.*)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(favicon\\.ico|robots\\.txt)",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
